@@ -8,7 +8,7 @@ Reference : [Judgels Installation Guide](https://github.com/ia-toki/judgels/wiki
 
 ### 0. Install requirement
 ```
-sudo apt install ansible net-tools
+sudo apt install ansible net-tools sshpass python3-pip
 ```
 
 ### 1. Initialize
@@ -48,6 +48,8 @@ sudo vim /etc/ssh/sshd_config
 #change it to
 #PermitRootLogin yes
 #then save
+
+systemctl restart sshd
 ```
 
 ### 7. Check ip
@@ -60,39 +62,56 @@ ifconfig
 vim dist/hosts
 ```
 
-### 8. Edit localhost to ip and save
+### 8. Edit localhost to ip and save (some example)
 
-example
 ```
 [local]
 localhost
 
 [judgels]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [database]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [raphael]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [jophiel]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [sandalphon]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [sealtiel]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [uriel]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [gabriel]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 
 [scoreboard_receiver]
-1.2.3.4 ansible_user=root
+192.168.233.133 ansible_user=root
 ```
 
-### 9. 
+### 9. Modify and Run ansible-playbook
+```
+#modify provision-machine.yml
+vim playbooks/provision-machine.yml
+```
+
+```
+#change line to this
+raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3-minimal python3-pip)
+```
+
+```
+sudo ansible-playbook -e @dist/env.yml playbooks/provision-machine.yml --ask-pass
+#then type root password
+```
+
+## References
+- https://www.liquidweb.com/kb/enable-root-login-via-ssh/
+- https://www.cyberciti.biz/faq/change-root-password-ubuntu-linux/
